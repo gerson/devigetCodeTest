@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct EntriesResponse: Codable {
+struct TopEntriesResponse: Codable {
     
     var data: EntryList
     
