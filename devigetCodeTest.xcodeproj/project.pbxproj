@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		D4DB9E0520EEBE7600221CE1 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DB9E0420EEBE7600221CE1 /* UIImageView+Extension.swift */; };
 		D4DB9E0720EEBE8E00221CE1 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DB9E0620EEBE8E00221CE1 /* Date+Extension.swift */; };
+		D4DB9E0B20EF00C200221CE1 /* EntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DB9E0A20EF00C200221CE1 /* EntryViewModel.swift */; };
+		D4DB9E0D20EF00FF00221CE1 /* BaseEntryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DB9E0C20EF00FF00221CE1 /* BaseEntryRepository.swift */; };
+		D4DB9E0F20EF013A00221CE1 /* WebEntryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DB9E0E20EF013A00221CE1 /* WebEntryRepository.swift */; };
+		D4DB9E1120EF016500221CE1 /* LocalEntryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DB9E1020EF016500221CE1 /* LocalEntryRepository.swift */; };
 		D4F6AF4D20F1246B00746713 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F6AF4C20F1246B00746713 /* AppDelegate.swift */; };
 		D4F6AF4F20F1246B00746713 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F6AF4E20F1246B00746713 /* MasterViewController.swift */; };
 		D4F6AF5120F1246B00746713 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F6AF5020F1246B00746713 /* DetailViewController.swift */; };
@@ -23,6 +27,10 @@
 /* Begin PBXFileReference section */
 		D4DB9E0420EEBE7600221CE1 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		D4DB9E0620EEBE8E00221CE1 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		D4DB9E0A20EF00C200221CE1 /* EntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewModel.swift; sourceTree = "<group>"; };
+		D4DB9E0C20EF00FF00221CE1 /* BaseEntryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseEntryRepository.swift; sourceTree = "<group>"; };
+		D4DB9E0E20EF013A00221CE1 /* WebEntryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebEntryRepository.swift; sourceTree = "<group>"; };
+		D4DB9E1020EF016500221CE1 /* LocalEntryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEntryRepository.swift; sourceTree = "<group>"; };
 		D4F6AF4920F1246B00746713 /* devigetCodeTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = devigetCodeTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F6AF4C20F1246B00746713 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D4F6AF4E20F1246B00746713 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +64,24 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		D4DB9E0820EF008400221CE1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				D4DB9E0A20EF00C200221CE1 /* EntryViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		D4DB9E0920EF00AA00221CE1 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				D4DB9E0C20EF00FF00221CE1 /* BaseEntryRepository.swift */,
+				D4DB9E0E20EF013A00221CE1 /* WebEntryRepository.swift */,
+				D4DB9E1020EF016500221CE1 /* LocalEntryRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
 		D4F6AF4020F1246B00746713 = {
 			isa = PBXGroup;
 			children = (
@@ -75,6 +101,8 @@
 		D4F6AF4B20F1246B00746713 /* devigetCodeTest */ = {
 			isa = PBXGroup;
 			children = (
+				D4DB9E0920EF00AA00221CE1 /* Repositories */,
+				D4DB9E0820EF008400221CE1 /* ViewModels */,
 				D4DB9E0320EEBE5800221CE1 /* Utils */,
 				D4F6AF6720F1246B00746713 /* Networking */,
 				D4F6AF6220F1246B00746713 /* Storyboards */,
@@ -194,12 +222,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4F6AF6620F1246B00746713 /* TopEntriesResponse.swift in Sources */,
+				D4DB9E0D20EF00FF00221CE1 /* BaseEntryRepository.swift in Sources */,
+				D4DB9E1120EF016500221CE1 /* LocalEntryRepository.swift in Sources */,
 				D4F6AF6420F1246B00746713 /* Entry.swift in Sources */,
 				D4DB9E0520EEBE7600221CE1 /* UIImageView+Extension.swift in Sources */,
 				D4F6AF6920F1246B00746713 /* EntryService.swift in Sources */,
 				D4F6AF5120F1246B00746713 /* DetailViewController.swift in Sources */,
 				D4DB9E0720EEBE8E00221CE1 /* Date+Extension.swift in Sources */,
+				D4DB9E0B20EF00C200221CE1 /* EntryViewModel.swift in Sources */,
 				D4F6AF4F20F1246B00746713 /* MasterViewController.swift in Sources */,
+				D4DB9E0F20EF013A00221CE1 /* WebEntryRepository.swift in Sources */,
 				D4F6AF4D20F1246B00746713 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

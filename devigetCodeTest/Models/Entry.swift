@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Entry: Codable {
+struct Entry: Codable {
     
     var id: String?
     var title: String?
@@ -30,5 +30,11 @@ class Entry: Codable {
         case fullImage = "url"
         case read
         case dismiss
+    }
+}
+
+extension Entry: Equatable {
+    static func == (lhs: Entry, rhs: Entry) -> Bool {
+        return lhs.id == rhs.id
     }
 }
