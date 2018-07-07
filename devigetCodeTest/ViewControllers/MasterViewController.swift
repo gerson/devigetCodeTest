@@ -8,73 +8,119 @@
 
 import UIKit
 
-class MasterViewController: UITableViewController {
-
+class MasterViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EntryDetailProtocol {
+    
+    @IBOutlet weak var tableView: UITableView!
+    private let refreshControl = UIRefreshControl()
     var detailViewController: DetailViewController? = nil
     var objects = [Any]()
-
-
+    let entryViewModel = EntryViewModel(entryRepo: WebEntryRepository.shared)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        navigationItem.leftBarButtonItem = editButtonItem
-
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(insertNewObject(_:)))
-        navigationItem.rightBarButtonItem = addButton
-        if let split = splitViewController {
-            let controllers = split.viewControllers
-            detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+        
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        } else {
+            tableView.addSubview(refreshControl)
+        }
+        
+        tableView.refreshControl?.beginRefreshing()
+        fetchEntries()
+        tableView.refreshControl?.addTarget(self, action: #selector(refreshEntries),
+                                            for: UIControlEvents.valueChanged)
+        tableView.tableFooterView = UIView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if splitViewController!.isCollapsed {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
+        }
+        self.tableView.reloadData()
+    }
+    
+    @objc func refreshEntries() {
+        fetchEntries()
+    }
+    
+    private func fetchEntries() {
+        entryViewModel.getAllEntries {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.tableView.refreshControl?.endRefreshing()
+            }
         }
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
-        super.viewWillAppear(animated)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    @objc
-    func insertNewObject(_ sender: Any) {
-        objects.insert(NSDate(), at: 0)
-        let indexPath = IndexPath(row: 0, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic)
-    }
-
+    
     // MARK: - Segues
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
             if let indexPath = tableView.indexPathForSelectedRow {
-                let object = objects[indexPath.row] as! NSDate
+                guard let entry = entryViewModel.entries?[indexPath.row] else { return }
                 let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = object
+                controller.detailEntry = entry
                 controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
     }
-
+    
     // MARK: - Table View
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 190
     }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-
-        let object = objects[indexPath.row] as! NSDate
-        cell.textLabel!.text = object.description
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return entryViewModel.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "entryCell", for: indexPath) as! EntryTableViewCell
+        let entry = entryViewModel.entries?[indexPath.row]
+        cell.delegate = self
+        cell.entry = entry
         return cell
     }
-
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let entry = entryViewModel.entries?[indexPath.row] {
+            self.entryViewModel.markedRead(entry) {
+                DispatchQueue.main.async {
+                    tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+                }
+            }
+        }
+    }
+    
+    @IBAction func dismissAllBTNTapped(_ sender: Any) {
+        clearAll()
+    }
+    
+    private func clearAll() {
+        self.entryViewModel.dismissAll {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    // MARK: - EntryDetailProtocol
+    func dismissEntry(_ entry: Entry) {
+        self.entryViewModel.dismissEntry(entry) {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
 }
 

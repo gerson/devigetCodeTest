@@ -9,37 +9,32 @@
 import UIKit
 
 class DetailViewController: UIViewController {
-
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
-
-
-    func configureView() {
-        // Update the user interface for the detail item.
-        if let detail = detailItem {
-            if let label = detailDescriptionLabel {
-                label.text = detail.description
-            }
-        }
-    }
-
+    
+    @IBOutlet weak var titleLB: UILabel!
+    @IBOutlet weak var authorLB: UILabel!
+    @IBOutlet weak var postImageView: UIImageView!
+    var detailEntry: Entry!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        configureView()
+        guard detailEntry != nil else { return }
+        populateView()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func populateView() {
+        self.titleLB.text = detailEntry.title
+        self.authorLB.text = detailEntry.author
+        self.postImageView.setImageFrom(link: detailEntry.thumbnail)
     }
-
-    var detailItem: NSDate? {
-        didSet {
-            // Update the view.
-            configureView()
+    
+    @IBAction func imageTapped(_ sender: Any) {
+        openFullImage()
+    }
+    
+    private func openFullImage() {
+        if let fullImage = detailEntry.fullImage {
+            UIApplication.shared.open(URL(string : fullImage)!, options: [:], completionHandler: { (status) in })
         }
     }
-
-
 }
 
